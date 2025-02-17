@@ -1,6 +1,12 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c2x -pedantic -fno-builtin
 
+ifeq ($(DEBUG), 1)
+	CFLAGS += 
+else
+	CFLAGS += -DNDEBUG 
+endif
+
 SRC_DIR = src
 INCLUDE_DIR = include
 BIN_DIR = bin
