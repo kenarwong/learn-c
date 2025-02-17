@@ -7,7 +7,7 @@ header_t *free_head, *free_tail = NULL;
 char heap[MAX_HEAP_SIZE];
 char *program_brk = heap;
 
-void add_to_free_list(header_t *header);
+void append_to_free_list(header_t *header);
 void remove_from_free_list(header_t *header);
 
 void *my_alloc(size_t size) {
@@ -81,12 +81,10 @@ void free(void *ptr) {
   // release block if last block
   if ((char *)ptr + header->s.size == program_break) {
     // add block to free list
-    add_to_free_list(header);
+    append_to_free_list(header);
 
     // delete consecutive free blocks (starting with last block)
-    header_t *prev_free = header;
-    while (prev_free->s.is_free) {
-
+    do {
       // update header list
       if (head == tail) {
         head = tail = NULL;
@@ -96,24 +94,25 @@ void free(void *ptr) {
       }
 
       // update free list
-      remove_from_free_list(prev_free);
+      remove_from_free_list(header);
 
       // free block
-      sbrk(0 - sizeof(header_t) - prev_free->s.size);
+      sbrk(0 - sizeof(header_t) - header->s.size);
 
       #ifndef NDEBUG
       program_break = sbrk(0);
       printf("program_break: %x\n", program_break);
       #endif
 
-      prev_free = prev_free->s.prev;
-    }
+      // get previous consecutive block
+      header = header->s.prev;
+    } while (header && header->s.is_free);
 
     return;
   }
 
   // add block to free list
-  add_to_free_list(header);
+  append_to_free_list(header);
 
   printf("------ END free ------\n");
   return;
@@ -163,10 +162,12 @@ void *get_free_block(size_t size) {
   return (void *) -1;
 }
 
-void add_to_free_list(header_t *header) {
-  printf("------ START add_to_free_list ------\n");
+void append_to_free_list(header_t *header) {
+  printf("------ START append_to_free_list ------\n");
 
   header->s.is_free = 1;
+  header->s.prev_free = header->s.next_free = NULL;
+
   if (!free_head) {
     free_head = free_tail = header;
   } else {
@@ -175,14 +176,13 @@ void add_to_free_list(header_t *header) {
     free_tail = header;
   }
 
-  printf("------ END add_to_free_list ------\n");
+  printf("------ END append_to_free_list ------\n");
   return;
 }
 
 void remove_from_free_list(header_t *header) {
   printf("------ START remove_from_free_list ------\n");
 
-  header->s.is_free = 0;
   if (free_head == free_tail) {
     free_head = free_tail = NULL;
   } else {
@@ -197,6 +197,9 @@ void remove_from_free_list(header_t *header) {
       header->s.next_free->s.prev_free = header->s.prev_free;
     }
   }
+
+  header->s.is_free = 0;
+  header->s.prev_free = header->s.next_free = NULL;
 
   printf("------ END remove_from_free_list ------\n");
   return;

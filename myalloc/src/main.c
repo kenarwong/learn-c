@@ -45,7 +45,7 @@ int main() {
   display_free_list();
 
   // Allocate non-contiguous block
-  printf("------ Allocating 20 bytes ------\n");
+  printf("------ Allocating 20 bytes to second block ------\n");
   void *ptr5 = my_alloc(20);
   printf("\n\n");
 
@@ -53,6 +53,13 @@ int main() {
   display_free_list();
 
   // Free end block and check if consecutive blocks are freed
+  printf("------ Freeing second block ------\n");
+  free(ptr5);
+  printf("\n\n");
+
+  display_blocks();
+  display_free_list();
+
   printf("------ Freeing fourth block ------\n");
   free(ptr4);
   printf("\n\n");
