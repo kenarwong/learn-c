@@ -2,7 +2,7 @@
 
 #include "headers.h"
 
-typedef char ALIGN[16];
+typedef char ALIGN[64];
 
 union header {
   struct {

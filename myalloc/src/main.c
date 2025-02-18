@@ -3,20 +3,20 @@
 
 int main() {
   // Allocate initial blocks
-  printf("------ Allocating 10 bytes ------\n");
-  void *ptr1 = my_alloc(10);
+  printf("------ Allocating 64 bytes ------\n");
+  void *ptr1 = my_alloc(64);
   printf("\n\n");
 
-  printf("------ Allocating 20 bytes ------\n");
-  void *ptr2 = my_alloc(20);
+  printf("------ Allocating 128 bytes ------\n");
+  void *ptr2 = my_alloc(128);
   printf("\n\n");
 
-  printf("------ Allocating 30 bytes ------\n");
-  void *ptr3 = my_alloc(30);
+  printf("------ Allocating 256 bytes ------\n");
+  void *ptr3 = my_alloc(256);
   printf("\n\n");
 
-  printf("------ Allocating 10 bytes ------\n");
-  void *ptr4 = my_alloc(10);
+  printf("------ Allocating 96 bytes ------\n");
+  void *ptr4 = my_alloc(96);
   printf("\n\n");
 
   display_blocks();
@@ -45,8 +45,8 @@ int main() {
   display_free_list();
 
   // Allocate non-contiguous block
-  printf("------ Allocating 20 bytes to second block ------\n");
-  void *ptr5 = my_alloc(20);
+  printf("------ Allocating 112 bytes to second block ------\n");
+  void *ptr5 = my_alloc(112);
   printf("\n\n");
 
   display_blocks();

@@ -55,7 +55,8 @@ void *my_alloc(size_t size) {
   
   printf("sizeof(header_t): %x\n", sizeof(header_t));
   // printf("header + sizeof(header_t): %x\n", ((void *)header) + sizeof(header_t));
-  printf("header + sizeof(header_t): %x\n", (header + 1));
+  printf("sizeof(header_t) + size: %x\n", sizeof(header_t) + size);
+  printf("next block: %x\n", (void *)(header + 1) + size);
   printf("------ END my_alloc ------\n");
 
   return (void *)(header + 1);
@@ -78,10 +79,13 @@ void free(void *ptr) {
   program_break = sbrk(0);
   printf("program_break: %x\n", program_break);
 
+  // add block to free list
+  append_to_free_list(header);
+
   // release block if last block
   if ((char *)ptr + header->s.size == program_break) {
-    // add block to free list
-    append_to_free_list(header);
+    // // add block to free list
+    // append_to_free_list(header);
 
     // delete consecutive free blocks (starting with last block)
     do {
@@ -108,11 +112,8 @@ void free(void *ptr) {
       header = header->s.prev;
     } while (header && header->s.is_free);
 
-    return;
+    // return;
   }
-
-  // add block to free list
-  append_to_free_list(header);
 
   printf("------ END free ------\n");
   return;
