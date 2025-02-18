@@ -84,9 +84,6 @@ void free(void *ptr) {
 
   // release block if last block
   if ((char *)ptr + header->s.size == program_break) {
-    // // add block to free list
-    // append_to_free_list(header);
-
     // delete consecutive free blocks (starting with last block)
     do {
       // update header list
@@ -111,8 +108,6 @@ void free(void *ptr) {
       // get previous consecutive block
       header = header->s.prev;
     } while (header && header->s.is_free);
-
-    // return;
   }
 
   printf("------ END free ------\n");
