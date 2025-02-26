@@ -21,28 +21,31 @@ void matrix_vector_multiply(csr_t *matrix, int *vector, int* result) {
 int main(void) {
 
   /*
-  *   3 0 0 0 1 0
-  *   0 4 1 0 5 9
-  *   0 0 0 2 0 6
-  *   5 0 0 3 0 0
-  *   5 0 0 0 8 0
-  *   0 0 0 9 7 0
+  *   5 0 0 0 0 0 0
+  *   0 6 8 0 4 2 0
+  *   0 0 0 0 3 3 0
+  *   9 0 0 5 0 0 3
+  *   0 0 0 0 0 0 0
+  *   0 2 0 1 0 0 0
   */
 
-  int *r = (int[]){0,2,6,8,10,12,14};
-  int *c = (int[]){0,4,1,2,4,5,3,5,0,3,0,4,3,4};
-  int *v = (int[]){3,1,4,1,5,9,2,6,5,3,5,8,9,7};
+  int n = 6;
+  int nnz = 12;
+
+  int r[7] = {0,1,5,7,10,10,12};
+  int c[12] = {0,1,2,4,5,4,5,0,3,6,1,3};
+  int v[12] = {5,6,8,4,2,3,3,9,5,3,2,1};
 
   csr_t matrix = {
-    .n = 6,
-    .nnz = 14,
-    .r = r,
-    .c = c,
-    .v = v,
+      .n = n,
+      .nnz = nnz,
+      .r = r,
+      .c = c,
+      .v = v,
   };
 
-  int vector[6] = {1,4,2,8,5,7};
-  int result[6];
+  int vector[7] = {2,7,8,5,7,1,4};
+  int result[n];
 
   matrix_vector_multiply(&matrix,vector,result);
 
