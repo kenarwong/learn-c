@@ -287,6 +287,9 @@ int binary_lift(code_t m_inst, ins_t *ins) {
     }
 
   } else {
+    // cleanup
+    free(imm);
+
     // error
     return -1;
   }

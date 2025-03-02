@@ -89,24 +89,12 @@ int main(int argc, char *argv[])
 }
 
 int readfile(FILE *fp, char **text) {
-  int lines_allocated = 10;
-
   // read lines
   char s[MAX_BUFFER]; 
   int i = 0;
-
   while (fgets(s, sizeof s, fp) != NULL) {
-    if (i >= lines_allocated) {
-      // double allocated space
-      lines_allocated *= 2;
-      if ((text = realloc(text, lines_allocated * MAX_BUFFER)) == NULL) {
-        return -1;
-      }
-    }
     text[i] = strdup(s);
-
     i++;
   }
-
   return i;
 }
