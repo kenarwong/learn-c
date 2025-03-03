@@ -120,7 +120,7 @@ void set_value(void *start, int size, int dim2, int row, int col, d_t value)
   printf("row_i: %p, item_i: %p\n", row_i, item_i);
 
   // can use memcpy with <string.h>
-  // memcpy(item_i, value, 3);
+  //memcpy(item_i, value, sizeof(d_t));
 
   // can use typedef and array index notation
   // RowArray *array = (RowArray *)start;
@@ -141,7 +141,9 @@ void set_value(void *start, int size, int dim2, int row, int col, d_t value)
   // ptr[row][col][0] = value[0];
   // ptr[row][col][1] = value[1];
   // ptr[row][col][2] = value[2];
-  set_d_t(ptr[row][col], value);
+  // set_d_t(ptr[row][col], value);
+
+  memcpy(ptr[row][col], value, sizeof(d_t));
 
   return;
 }
@@ -157,9 +159,9 @@ void print_matrix(void *start, int size, int rows, int cols)
   {
     for (int j = 0; j < cols; j++)
     {
-      __uint8_t c1 = *((__uint8_t *)ptr);
-      __uint8_t c2 = *((__uint8_t *)(ptr + 1));
-      __uint8_t c3 = *((__uint8_t *)(ptr + 2));
+      c1 = *((__uint8_t *)ptr);
+      c2 = *((__uint8_t *)(ptr + 1));
+      c3 = *((__uint8_t *)(ptr + 2));
 
       if (c1 == 0 &&
           c2 == 0 &&
