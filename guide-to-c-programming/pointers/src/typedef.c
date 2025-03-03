@@ -27,9 +27,11 @@ int main() {
   printf("ptr: %p, ptr+1: %p\n", (void*)ptr, (void*)(ptr+1));
 
   // Same thing as typedef
-  int(*p1d)[10];
+  int(*p1d)[10]; // pointer to 1d array of 10 integers
   // different from
-  // int *p1d[10];
+  // int *p1d[10]; // this is an array of 10 pointers to integers
+
+  // int*
   printf("sizeof(*p1d): %zu (0x%x)\n", sizeof(*p1d), (unsigned)sizeof(*p1d));
   printf("sizeof(p1d): %zu (0x%x)\n", sizeof(p1d), (unsigned)sizeof(p1d));
 

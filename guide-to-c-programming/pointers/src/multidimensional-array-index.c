@@ -1,11 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define ROWS 5
 #define COLS 10
 
+typedef __uint8_t d_t[3];
+typedef d_t RowArray[3];
+
 int multi[ROWS][COLS];
 
-void set_value(void *start, int size, int dim2, int row, int col, unsigned value);
+//void set_value(void *start, int size, int dim2, int row, int col, __uint8_t(value)[3]);
+void set_value(void *start, int size, int dim2, int row, int col, d_t value);
 void print_matrix(void *start, int size, int rows, int cols);
 
 int main(void)
@@ -49,9 +54,11 @@ int main(void)
 
   // array of arbitrary size
   int rows = 6;
-  int cols = 3;
+  int cols = 4;
   int size = 3;
   void *ptr = calloc(rows * cols, size);
+  // void *p = calloc(rows * cols, size);
+  // int (*ptr)[cols] = p; // change pointer to array of arrays
   //memset(ptr, 1, rows*cols*size);
 
   print_matrix(ptr, size, rows, cols);
@@ -61,18 +68,22 @@ int main(void)
   // printf("---\n");
 
   printf("--- Set Value ---\n");
-  set_value(ptr, size, cols, 4, 1, 0xabcdef);
+  set_value(ptr, size, cols, 4, 1, (__uint8_t[3]){0xab,0xcd,0xef});
   printf("---\n");
 
   printf("--- Arbitrary-sized Array ---\n");
   print_matrix(ptr, size, rows, cols);
 
   printf("--- Set Value ---\n");
-  set_value(ptr, size, cols, 2, 0, 0xfedcba);
+  set_value(ptr, size, cols, 2, 0, (__uint8_t[3]){0xfe,0xdc,0xba});
   printf("---\n");
 
   printf("--- Set Value ---\n");
-  set_value(ptr, size, cols, 0, 2, 0xff00ff);
+  set_value(ptr, size, cols, 0, 2, (__uint8_t[3]){0xff,0x00,0xff});
+  printf("---\n");
+
+  printf("--- Set Value ---\n");
+  set_value(ptr, size, cols, 0, 1, (__uint8_t[3]){0x00,0xff,0x00});
   printf("---\n");
 
   printf("--- Arbitrary-sized Array ---\n");
@@ -83,11 +94,20 @@ int main(void)
   return 0;
 }
 
+void set_d_t(d_t ptr, d_t value) {
+  // *ptr = value[0];
+  // *(ptr+1) = value[1];
+  // *(ptr+2) = value[2];
+  ptr[0] = value[0];
+  ptr[1] = value[1];
+  ptr[2] = value[2];
+}
+
 // To index a multi-dimensional array
 //    dim1 is not necessary (number of rows)
 // Refer to array-parameters.c: print_2D_array(int a[][3])
 //    Only column size is necessary
-void set_value(void *start, int size, int dim2, int row, int col, unsigned value)
+void set_value(void *start, int size, int dim2, int row, int col, d_t value)
 {
 
   printf("row: %d, col: %d, size: %i\n", row, col, size);
@@ -99,7 +119,29 @@ void set_value(void *start, int size, int dim2, int row, int col, unsigned value
   void *item_i = row_i + col * size;
   printf("row_i: %p, item_i: %p\n", row_i, item_i);
 
-  *(unsigned *)(item_i) = value;
+  // can use memcpy with <string.h>
+  // memcpy(item_i, value, 3);
+
+  // can use typedef and array index notation
+  // RowArray *array = (RowArray *)start;
+
+  // printf("array: %p, start: %p\n", (void *)array, (void *)start);
+  // printf("array[%d]: %p, array[%d][%d]: %p\n", row, (void *)array[row], row, col, (void *)array[row][col]);
+
+  // array[row][col][0] = value[0];
+  // array[row][col][1] = value[1];
+  // array[row][col][2] = value[2];
+
+  // can use short-hand pointer types instead of typedef
+  // typedef __uint8_t d_t[3];
+  d_t(*ptr)[dim2] = start;
+  // __uint8_t(*ptr)[dim2][3] = start;
+
+  // // stiil can use array index notation
+  // ptr[row][col][0] = value[0];
+  // ptr[row][col][1] = value[1];
+  // ptr[row][col][2] = value[2];
+  set_d_t(ptr[row][col], value);
 
   return;
 }
@@ -124,7 +166,7 @@ void print_matrix(void *start, int size, int rows, int cols)
           c3 == 0) {
         printf(" NULL  ");
       } else {
-        printf("%x%x%x ", c1,c2,c3);
+        printf("%02x%02x%02x ", c1,c2,c3);
       }
 
       ptr += size;
