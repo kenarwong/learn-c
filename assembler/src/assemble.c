@@ -12,11 +12,19 @@ void assemble(char **text, int linecount, FILE *outfile)
   printf("Assembling...\n");
   #endif
 
-  // allocate memory for ir
+  // allocate memory 
   ins_t *ir = (ins_t *)malloc(sizeof(ins_t)*linecount);
+  if (ir == NULL) {
+    printf("Error: memory allocation failed\n");
+    return;
+  }
+  char *asm_inst = (char *)malloc(MAX_BUFFER*linecount);
+  if (asm_inst == NULL) {
+    printf("Error: memory allocation failed\n");
+    return;
+  }
 
   // scan and parse each instruction
-  char *asm_inst;
   char *token[4];
   int n = 0;
   int pc = 0x00; // program counter
@@ -25,14 +33,14 @@ void assemble(char **text, int linecount, FILE *outfile)
   // loop through each line
   for (int i = 0; i < linecount; i++) {
     // copy asm instruction
-    asm_inst = strdup(text[i]);
+    strcpy(&asm_inst[i*MAX_BUFFER], text[i]);
 
     // scan and parse
     n = scan(text[i], token);
     parse(token, n, &ir[i]);
 
     // add asm instruction to ir
-    ir[i].asm_inst = asm_inst;
+    ir[i].asm_inst = &asm_inst[i*MAX_BUFFER];
 
     // generate machine binary
     code_gen(&ir[i]);
@@ -48,9 +56,7 @@ void assemble(char **text, int linecount, FILE *outfile)
   #endif
 
   // cleanup
-  for (int i = 0; i < linecount; i++) {
-    free(ir[i].asm_inst);
-  }
+  free(asm_inst);
   free(ir);
 }
 

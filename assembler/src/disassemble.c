@@ -12,9 +12,17 @@ void disassemble(char **text, int linecount, FILE *outfile)
   printf("Disassembling...\n");
   #endif
 
-  // allocate memory for ir
+  // allocate memory 
   ins_t *ir = (ins_t *)malloc(sizeof(ins_t)*linecount);
+  if (ir == NULL) {
+    printf("Error: memory allocation failed\n");
+    return;
+  }
   char *asm_inst = (char *)malloc(MAX_BUFFER*linecount);
+  if (asm_inst == NULL) {
+    printf("Error: memory allocation failed\n");
+    return;
+  }
 
   // scan and parse each instruction
   int pc; // program counter
