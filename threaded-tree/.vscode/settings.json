@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "*.tex": "latex",
+    "threaded_tree.h": "c",
+    "headers.h": "c"
+  }
+}
