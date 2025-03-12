@@ -28,12 +28,37 @@ int main() {
   // setleft('d', 3);
   // setleft('e', 7);
 
-  // e c f b d a
+  // // e c f b d a g
+  // setleft('b', 0);
+  // setleft('c', 1);
+  // setright('d', 1);
+  // setleft('e', 3);
+  // setright('f', 3);
+  // setright('g', 0);
+
+  // // e c f b d a
+  // setleft('b', 0);
+  // setright('d', 1);
+  // setleft('c', 1);
+  // setright('f', 3);
+  // setleft('e', 3);
+
+  // d b a e g c h f i
   setleft('b', 0);
-  setleft('c', 1);
-  setright('d', 1);
-  setleft('e', 3);
-  setright('f', 3);
+  setright('c', 0);
+  setleft('d', 1);
+  setleft('e', 2);
+  setright('f', 2);
+  setright('g', 5);
+  setleft('h', 6);
+  setright('i', 6);
+
+  // // d b e c a f
+  // setleft('b', 0);
+  // setright('c', 1);
+  // setleft('d', 1);
+  // setleft('e', 4);
+  // setright('f', 0);
 
   #ifndef NDEBUG
   print_tree(arr);

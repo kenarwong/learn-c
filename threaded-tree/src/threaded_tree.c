@@ -180,7 +180,7 @@ node *leftmost(node **arr, int *i) {
   int next = 2*(*i) + 1;
   node *p = arr[next];
 
-  while (p != NULL) {
+  while (p) {
     *i = next;
 
     #ifndef NDEBUG
